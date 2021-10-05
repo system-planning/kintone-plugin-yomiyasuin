@@ -1,0 +1,34 @@
+{
+  "manifest_version": 1,
+  "version": 1,
+  "type": "APP",
+  "desktop": {
+    "js": [
+      "assets/build/plugin.js"
+    ],
+    "css": [
+      "assets/build/plugin.css"
+    ]
+  },
+  "icon": "assets/image/icon.png",
+  "config": {
+    "html": "assets/config.html",
+    "js": [
+      "assets/build/config.js"
+    ],
+    "css": [
+      "assets/build/config.css"
+    ],
+    "required_params": [
+    
+    ]
+  },
+  "name": {
+    "en": "yomiyasuin",
+    "ja": "ヨミヤスイン"
+  },
+  "description": {
+    "en": "yomiyasuin",
+    "ja": "議事録を読みやすく"
+  }
+}
