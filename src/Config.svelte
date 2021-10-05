@@ -2,7 +2,7 @@
 </script>
 
 <section class="settings">
-  <h2 class="settings-heading">Settings for yomiyasuin</h2>
+  <h2 class="settings-heading">Settings for plugin</h2>
   <form class="js-submit-settings" />
 </section>
 
