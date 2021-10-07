@@ -1,11 +1,18 @@
+import type { FieldsJson } from "./types"
 import Config from "./Config.svelte"
-;((PLUGIN_ID) => {
+;(async (PLUGIN_ID) => {
   const config = kintone.plugin.app.getConfig(PLUGIN_ID)
   console.log(config)
+
+  const res: FieldsJson = await kintone.api("/k/v1/app/form/fields.json", "GET", {
+    app: kintone.app.getId(),
+  })
+  if (!res?.properties) return
+
   const app = new Config({
     target: document.querySelector("#config"),
     props: {
-      name: "config dayo",
+      properties: res.properties,
     },
   })
 

@@ -3,7 +3,7 @@ const runAll = require("npm-run-all")
 const chokidar = require("chokidar")
 
 const build = debounce(() => {
-  return runAll(["compile", "pack"], {
+  return runAll(["pack"], {
     stdout: process.stdout,
     stdin: process.stdin,
   }).catch(({ results }) => {
@@ -15,6 +15,6 @@ const build = debounce(() => {
   })
 }, 500)
 
-chokidar.watch("./src").on("change", (event, path) => {
+chokidar.watch("./assets").on("change", (event, path) => {
   build()
 })
