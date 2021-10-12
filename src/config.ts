@@ -1,7 +1,8 @@
-import type { FieldsJson } from "./types"
+import { getPluginConfig } from "./modules/getPluginConfig"
+import type { FieldsJson, PluginConfig } from "./types"
 import Config from "./Config.svelte"
 ;(async (PLUGIN_ID) => {
-  const config = kintone.plugin.app.getConfig(PLUGIN_ID)
+  const config: PluginConfig = getPluginConfig(PLUGIN_ID)
   console.log(config)
 
   const res: FieldsJson = await kintone.api("/k/v1/app/form/fields.json", "GET", {
@@ -9,10 +10,11 @@ import Config from "./Config.svelte"
   })
   if (!res?.properties) return
 
-  const app = new Config({
+  new Config({
     target: document.querySelector("#config"),
     props: {
       properties: res.properties,
+      config,
     },
   })
 

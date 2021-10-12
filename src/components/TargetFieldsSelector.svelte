@@ -1,26 +1,20 @@
 <script lang="ts">
-  export let title: string;
-  export let description: string;
+  import type { KintoneFormFieldProperty } from "@kintone/rest-api-client"
+  export let properties: KintoneFormFieldProperty.OneOf[]
+  export let value = []
+  export let handleChange: (e: any) => void
 </script>
 
-<div class="plugin-row">
-  <div class="plugin-label">{title}</div>
-  <div class="plugin-select-outer">
-    <div class="plugin-select">
-      <select id="markdown_files_value">
-        <option multiple value="">--</option>
-      </select>
-    </div>
-  </div>
-  <div class="plugin-desc">{description}</div>
+<div class="fields-selector">
+  <select {value} name="" id="" size={properties.length} multiple on:change={handleChange}>
+    {#each properties as property}
+      <option value={property.code}>{property.code}</option>
+    {/each}
+  </select>
 </div>
 
 <style>
-  .plugin-row {
+  .fields-selector {
     margin-top: 24px;
-  }
-  .plugin-label {
-    margin-bottom: 8px;
-    font-weight: bold;
   }
 </style>
