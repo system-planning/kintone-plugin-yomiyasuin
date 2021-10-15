@@ -1,0 +1,32 @@
+.yomiyasuin-content {
+  padding: 4px;
+}
+
+.yomiyasuin-line {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
+  background-color: #fff;
+  border-radius: 2px;
+  padding: 8px;
+  margin-bottom: 6px !important;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);
+}
+.yomiyasuin-name {
+  box-sizing: border-box;
+  padding: 4px;
+  color: #3c3c3c;
+}
+.yomiyasuin-icon {
+  width: 40px;
+  height: auto;
+  grid-column: 1;
+  grid-row: 1 / 3;
+  margin-right: 4px;
+}
+.yomiyasuin-selif {
+  position: relative;
+  box-sizing: border-box;
+  padding: 4px;
+}

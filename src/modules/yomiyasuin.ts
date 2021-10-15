@@ -1,6 +1,6 @@
 import type { Plugin } from "unified"
 import type { Node, Parent, Literal } from "unist"
-import type { Paragraph, Text } from "mdast"
+import type { Paragraph, Text, Image } from "mdast"
 import type { VFileCompatible } from "vfile"
 import type { MdastNode, Handler, H } from "mdast-util-to-hast/lib"
 import { visit } from "unist-util-visit"
@@ -18,12 +18,22 @@ export const handlers: Record<string, Handler> = {
       type: "element",
       tagName: "div",
       properties: {
-        class: ["yomiyasuin"],
+        class: ["yomiyasuin-content"],
       },
       children: [...all(h, node)],
     }
   },
-  b: (h: H, node: MdastNode) => {
+  line: (h: H, node: MdastNode) => {
+    return {
+      type: "element",
+      tagName: "p",
+      properties: {
+        class: ["yomiyasuin-line"],
+      },
+      children: [...all(h, node)],
+    }
+  },
+  name: (h: H, node: MdastNode) => {
     return {
       type: "element",
       tagName: "b",
@@ -33,7 +43,7 @@ export const handlers: Record<string, Handler> = {
       children: [...all(h, node)],
     }
   },
-  span: (h: H, node: MdastNode) => {
+  selif: (h: H, node: MdastNode) => {
     return {
       type: "element",
       tagName: "span",
@@ -43,12 +53,14 @@ export const handlers: Record<string, Handler> = {
       children: [...all(h, node)],
     }
   },
-  image: (h: H, node: MdastNode) => {
+  icon: (h: H, node: MdastNode) => {
     return {
       type: "element",
       tagName: "img",
       properties: {
         class: ["yomiyasuin-icon"],
+        src: (node as Image).url,
+        alt: "",
       },
       children: [...all(h, node)],
     }
@@ -74,37 +86,31 @@ function visitor(node: Paragraph, index: number, parent: Parent | undefined) {
   const gijiroku = lines.map((line) => {
     const [name, selif] = line.split("：")
     return {
-      type: "paragraph",
+      type: "line",
       children: [
         {
-          type: "image",
-          position: {},
-          alt: "",
+          type: "icon",
           url: "https://static.cybozu.com/contents/k/image/icon/user/user_32.svg",
         },
         {
-          type: "b",
+          type: "name",
           children: [
             {
               type: "text",
               value: name,
-              position: {},
             },
           ],
-          position: {},
         },
         {
-          type: "span",
+          type: "selif",
           children: [
             {
               type: "text",
               value: selif,
-              position: {},
             },
           ],
         },
       ],
-      position: {},
     }
   })
   // @ts-ignore
