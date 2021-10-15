@@ -1,7 +1,6 @@
 import type { KintoneEventObject } from "./types"
 import { getPluginConfig } from "./modules/getPluginConfig"
 import { toHtml } from "./modules/toHtml"
-import App from "./App.svelte"
 ;((PLUGIN_ID) => {
   kintone.events.on(
     ["app.record.detail.show", "app.record.create.show", "app.record.edit.show"],
@@ -17,15 +16,10 @@ import App from "./App.svelte"
           const el = kintone.app.record.getFieldElement(fieldCode)
           const parentEl = el?.parentElement
           if (parentEl) {
-            console.log(parentEl)
             parentEl.setAttribute("class", parentEl.getAttribute("class") + " yomiyasuin")
-            const appEl = document.createDocumentFragment()
-            new App({
-              target: appEl,
-              props: {
-                html,
-              },
-            })
+            const appEl = document.createElement("div")
+            appEl.setAttribute("class", "yomiyasuin-wrapper markdown-body")
+            appEl.innerHTML = html
             parentEl.appendChild(appEl)
           }
         })
