@@ -8,7 +8,6 @@
   console.log(config)
 
   const onSelectTargetFields = (e) => {
-    console.log(e.target)
     const target = e.target as HTMLSelectElement
     selectedFields = Array.from(target.options)
       .filter((el) => el.selected)
