@@ -1,3 +1,7 @@
+.yomiyasuin {
+  overflow: auto;
+}
+
 .yomiyasuin-content {
   padding: 4px;
 }
@@ -29,4 +33,12 @@
   position: relative;
   box-sizing: border-box;
   padding: 4px;
+}
+.yomiyasuin-html.markdown-body h1,
+.yomiyasuin-html.markdown-body h2,
+.yomiyasuin-html.markdown-body h3,
+.yomiyasuin-html.markdown-body h4,
+.yomiyasuin-html.markdown-body h5,
+.yomiyasuin-html.markdown-body h6 {
+  color: #1e4694;
 }
