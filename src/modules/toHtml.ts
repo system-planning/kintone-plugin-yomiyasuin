@@ -6,10 +6,12 @@ import { plugin, handlers } from "./yomiyasuin"
 import remarkBreaks from "remark-breaks"
 import rehypeExternalLinks from "rehype-external-links"
 
-export const toHtml = async (markdown: string) => {
+export const toHtml = async (markdown: string, userData: any) => {
   const result = await unified()
     .use(remarkParse)
-    .use(plugin)
+    .use(plugin, {
+      userData,
+    })
     .use(remarkBreaks)
     .use(remarkRehype, {
       handlers,

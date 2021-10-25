@@ -13,7 +13,7 @@ import Display from "./components/Display.svelte"
 
       await Promise.all(
         config.targetFields.map(async (fieldCode) => {
-          const html = await toHtml(record[fieldCode].value as string)
+          const html = await toHtml(record[fieldCode].value as string, config.userData)
           const el = kintone.app.record.getFieldElement(fieldCode)
           const parentEl = el?.parentElement
           if (parentEl) {

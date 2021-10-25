@@ -10,9 +10,9 @@ import { unified } from "unified"
 import remarkGfm from "remark-gfm"
 import remarkRehype from "remark-rehype"
 
-export const plugin: Plugin = () => {
+export const plugin: Plugin = ({ userData }: { userData: any }) => {
   return (tree: Node, _file: VFileCompatible) => {
-    visit(tree, isGijiroku, visitor)
+    visit(tree, isGijiroku, createVisitor(userData))
   }
 }
 
@@ -109,56 +109,69 @@ export const handlers: Record<string, Handler> = {
   },
 }
 
-function visitor(node: Paragraph, index: number, parent: Parent | undefined) {
-  const firstChild = node.children[0]
-  if (!isText(firstChild)) return
+function createVisitor(userData: any) {
+  return function visitor(node: Paragraph, index: number, parent: Parent | undefined) {
+    const firstChild = node.children[0]
+    if (!isText(firstChild)) return
 
-  let cursor = -1
-  const lines = firstChild.value.split("\n").reduce<string[]>((ret, line) => {
-    if (/.+[：]/.test(line)) {
-      cursor++
-    }
-    if (!ret[cursor]) {
-      ret[cursor] = ""
-    }
-    ret[cursor] += `${line.trimLeft()}`
-    return ret
-  }, [])
+    let cursor = -1
+    const lines = firstChild.value.split("\n").reduce<string[]>((ret, line) => {
+      if (/.+[：]/.test(line)) {
+        cursor++
+      }
+      if (!ret[cursor]) {
+        ret[cursor] = ""
+      }
+      ret[cursor] += `${line.trimLeft()}`
+      return ret
+    }, [])
 
-  const gijiroku = lines.map((line) => {
-    const [name, selif] = line.split("：")
-    return {
-      type: "line",
-      children: [
-        {
-          type: "icon",
-          url: "https://static.cybozu.com/contents/k/image/icon/user/user_32.svg",
-        },
-        {
-          type: "name",
-          children: [
-            {
-              type: "text",
-              value: name,
-            },
-          ],
-        },
-        {
-          type: "selif",
-          children: [
-            {
-              type: "text",
-              value: selif,
-            },
-          ],
-        },
-      ],
+    const defaultIcon = "https://static.cybozu.com/contents/k/image/icon/user/user_32.svg"
+    const mapData = new Map()
+    userData.forEach(({ name, id }) => {
+      mapData.set(name, { name, id })
+    })
+
+    function buildUserIconUrl(name) {
+      if (!mapData.get(name)?.id) return defaultIcon
+      return `/api/user/photo.do/-/user.png?id=${mapData.get(name)?.id}&size=SIZE_96_R&.png`
     }
-  })
-  // @ts-ignore
-  node.type = "yomiyasuin"
-  // @ts-ignore
-  node.children = gijiroku
+
+    const gijiroku = lines.map((line) => {
+      const [name, selif] = line.split("：")
+      return {
+        type: "line",
+        children: [
+          {
+            type: "icon",
+            url: buildUserIconUrl(name),
+          },
+          {
+            type: "name",
+            children: [
+              {
+                type: "text",
+                value: name,
+              },
+            ],
+          },
+          {
+            type: "selif",
+            children: [
+              {
+                type: "text",
+                value: selif,
+              },
+            ],
+          },
+        ],
+      }
+    })
+    // @ts-ignore
+    node.type = "yomiyasuin"
+    // @ts-ignore
+    node.children = gijiroku
+  }
 }
 
 const isGijiroku = (node: unknown): node is Paragraph => {

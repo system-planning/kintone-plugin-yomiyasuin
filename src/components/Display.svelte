@@ -41,6 +41,7 @@
     right: 8px;
     top: 8px;
     white-space: nowrap;
+    z-index: 10;
   }
   .yomiyasuin-html {
     padding: 8px;
