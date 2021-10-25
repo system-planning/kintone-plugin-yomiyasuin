@@ -1,14 +1,26 @@
 <script lang="ts">
+  export let containerEl: HTMLElement
+  export let valueSelector: string
   export let html: string
   let isShown: boolean = false
   const onClick = (e) => {
     isShown = e.target.checked
+    const valueEl = containerEl?.querySelector(valueSelector)
+    if (!valueEl) return
+    valueEl.setAttribute("aria-hidden", isShown ? "true" : "false")
   }
 </script>
 
 <div class="yomiyasuin-display">
   <div class="yomiyasuin-switch">
-    HTML <input type="checkbox" on:click={onClick} checked={isShown} />
+    <label>
+      HTML <input
+        type="checkbox"
+        on:click={onClick}
+        checked={isShown}
+        aria-label="display as HTML"
+      />
+    </label>
   </div>
   {#if isShown}
     <div class="yomiyasuin-html markdown-body">{@html html}</div>

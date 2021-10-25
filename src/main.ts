@@ -23,8 +23,11 @@ import Display from "./components/Display.svelte"
               target: parentEl,
               props: {
                 html,
+                containerEl: parentEl,
+                valueSelector: ".control-value-gaia",
               },
             })
+            console.log()
             // appEl.setAttribute("class", "yomiyasuin-wrapper markdown-body")
             // appEl.innerHTML = html
             // parentEl.appendChild(appEl)
