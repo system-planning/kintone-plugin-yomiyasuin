@@ -10,8 +10,14 @@ export type FieldsJson = {
   properties: FieldProperties
 }
 
+export type User = {
+  id: string
+  name: string
+}
+
 export type PluginConfig = {
   targetFields: string[]
+  userData: User[]
 }
 
 export type KintoneEventObject = {
