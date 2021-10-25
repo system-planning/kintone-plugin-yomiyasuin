@@ -109,7 +109,7 @@
     <textarea bind:value={userDataString} on:change={onChangeUserDataString} />
   </div>
   <div class="buttons">
-    <button class="actionButton loadFileButton" on:click={onClickLoadFile}>
+    <button class="actionButton loadFileButton" type="button" on:click={onClickLoadFile}>
       Load from file
       <input type="file" bind:this={inputEl} on:change={onSelectFile} accept=".json,.txt" />
     </button>

@@ -60,7 +60,7 @@
 </script>
 
 <section class="settings">
-  <h2 class="settings-heading">Settings for plugin</h2>
+  <h2 class="settings-heading">Settings for Yomiyasuin plugin</h2>
   <form class="js-submit-settings" on:submit={submit}>
     <section class="targetFields">
       <h3 class="heading">Target Fields</h3>
@@ -81,7 +81,7 @@
       />
     </section>
     <div class="buttons">
-      <button class="submitButton">submit</button>
+      <button class="submitButton">Save</button>
       <div class="errorMessage">
         {#if errorMessage}
           <div>{errorMessage}</div>
