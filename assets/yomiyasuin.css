@@ -28,10 +28,10 @@
 .yomiyasuin-icon {
   grid-column: 1/2;
   grid-row: 1/2;
-  width: 50px;
+  width: 48px;
   height: auto;
-  border: 1px solid #000;
   box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
 }
 .yomiyasuin-selif {
   grid-column: 2/3;
@@ -56,12 +56,66 @@
   border: 8px solid transparent;
   border-right-color: #fff;
 }
-
-.yomiyasuin-html.markdown-body h1,
-.yomiyasuin-html.markdown-body h2,
-.yomiyasuin-html.markdown-body h3,
-.yomiyasuin-html.markdown-body h4,
-.yomiyasuin-html.markdown-body h5,
-.yomiyasuin-html.markdown-body h6 {
+.yomiyasuin-html {
+  color: #333;
+  overflow: hidden;
+  font-family: 'Helvetica Neue', Helvetica, 'Segoe UI', Arial, freesans, sans-serif;
+  font-size: 16px;
+}
+.yomiyasuin-html h1,
+.yomiyasuin-html h2,
+.yomiyasuin-html h3,
+.yomiyasuin-html h4,
+.yomiyasuin-html h5,
+.yomiyasuin-html h6 {
+  position: relative;
+  margin-top: 1em;
+  margin-bottom: 16px;
+  font-weight: bold;
+  line-height: 1.4;
   color: #1e4694;
+}
+
+.yomiyasuin-html h1 {
+  font-size: 1.6em;
+}
+.yomiyasuin-html h2 {
+  font-size: 1.5em;
+  padding-left: 5px;
+  border-left: 8px solid;
+}
+
+.yomiyasuin-html h3 {
+  font-size: 1.3em;
+  border-bottom: 1px solid currentColor;
+}
+.yomiyasuin-html h4 {
+  font-size: 1.1em;
+  padding-left: 5px;
+  border-left: 4px solid;
+  border-bottom: 1px dotted;
+}
+.yomiyasuin-html h5 {
+  font-size: 1em;
+  border-bottom: 1px dotted;
+}
+.yomiyasuin-html h6 {
+  font-size: 0.9em;
+  padding-left: 5px;
+  border-left: 4px solid;
+}
+.yomiyasuin-html ul {
+  padding: 0;
+  margin: 0;
+  padding-left: 2em;
+  list-style-type: disc;
+  margin-bottom: 16px;
+}
+
+.yomiyasuin-html ul ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.yomiyasuin-html ul p {
+  margin: 0;
 }

@@ -11,6 +11,9 @@ import remarkGfm, { Root } from "remark-gfm"
 import remarkRehype from "remark-rehype"
 import { toString } from "mdast-util-to-string"
 import remarkBreaks from "remark-breaks"
+import { toHast } from "mdast-util-to-hast/lib"
+import { toHtml } from "hast-util-to-html"
+import rehypeRaw from "rehype-raw"
 
 export const plugin: Plugin = ({ userData }: { userData: any }) => {
   return (tree: Node, _file: VFileCompatible) => {
@@ -49,12 +52,19 @@ export const handlers: Record<string, Handler> = {
       children: [...all(h, node)],
     }
   },
+  // @ts-ignore
   selif: (h: H, node: MdastNode) => {
-    const processer = unified().use(remarkParse).use(remarkGfm).use(remarkRehype)
+    const processer = unified()
+      .use(remarkParse)
+      .use(remarkGfm)
+      .use(remarkRehype, {
+        allowDangerousHtml: true,
+      })
+      .use(rehypeRaw)
     // @ts-ignore
     const mdast = processer.parse(node.children[0].value)
-    const hast = processer.runSync(mdast)
-    const paragraph = hast.children[0]
+    // @ts-ignore
+    const hast = processer.runSync(mdast.children[0])
 
     return {
       type: "element",
@@ -63,7 +73,7 @@ export const handlers: Record<string, Handler> = {
         class: ["yomiyasuin-selif"],
       },
       // @ts-ignore
-      children: [...paragraph.children],
+      children: hast.children,
     }
   },
   icon: (h: H, node: MdastNode) => {
@@ -90,11 +100,11 @@ export const handlers: Record<string, Handler> = {
 
 function createVisitor(userData: any) {
   return function visitor(node: Paragraph, index: number, parent: Parent | undefined) {
-    const firstChild = node.children[0]
-    if (!isText(firstChild)) return
+    // @ts-ignore
+    const partialMd = toHtml(toHast(node).children)
 
     let cursor = -1
-    const lines = firstChild.value.split("\n").reduce<string[]>((ret, line) => {
+    const lines = partialMd.split("\n").reduce<string[]>((ret, line) => {
       if (/.+[：]/.test(line)) {
         cursor++
       }
