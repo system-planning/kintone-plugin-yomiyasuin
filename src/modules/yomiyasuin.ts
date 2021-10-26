@@ -7,8 +7,10 @@ import type { MdastNode, Handler, H } from "mdast-util-to-hast/lib"
 import { visit } from "unist-util-visit"
 import { all } from "mdast-util-to-hast"
 import { unified } from "unified"
-import remarkGfm from "remark-gfm"
+import remarkGfm, { Root } from "remark-gfm"
 import remarkRehype from "remark-rehype"
+import { toString } from "mdast-util-to-string"
+import remarkBreaks from "remark-breaks"
 
 export const plugin: Plugin = ({ userData }: { userData: any }) => {
   return (tree: Node, _file: VFileCompatible) => {
@@ -48,37 +50,6 @@ export const handlers: Record<string, Handler> = {
     }
   },
   selif: (h: H, node: MdastNode) => {
-    // const delimiter = "$$_$$_$$_$$_$$_$$"
-    // const regex = /https?:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+/g
-    // @ts-ignore
-    // const result = node.children[0].value
-    //   .replace(regex, (match) => {
-    //     return `${delimiter}${match}${delimiter}`
-    //   })
-    //   .split(delimiter)
-    //   .map((text) => {
-    //     if (regex.test(text)) {
-    //       console.log(text)
-    //       return {
-    //         type: "element",
-    //         tagName: "a",
-    //         children: [
-    //           {
-    //             type: "text",
-    //             value: text,
-    //           },
-    //         ],
-    //         properties: {
-    //           href: text,
-    //         },
-    //       }
-    //     }
-    //     return {
-    //       type: "text",
-    //       value: text,
-    //     }
-    //   })
-
     const processer = unified().use(remarkParse).use(remarkGfm).use(remarkRehype)
     // @ts-ignore
     const mdast = processer.parse(node.children[0].value)
@@ -106,6 +77,14 @@ export const handlers: Record<string, Handler> = {
       },
       children: [...all(h, node)],
     }
+  },
+  // @ts-ignore
+  paragraph: (h: H, node: MdastNode) => {
+    const partialMd = toString(node)
+    const processer = unified().use(remarkBreaks).use(remarkParse).use(remarkGfm).use(remarkRehype)
+    const mdast = processer.parse(partialMd)
+    const hast = processer.runSync(mdast)
+    return hast
   },
 }
 

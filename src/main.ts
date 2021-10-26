@@ -8,8 +8,6 @@ import Display from "./components/Display.svelte"
     async (eventObject: KintoneEventObject) => {
       const config = getPluginConfig(PLUGIN_ID)
       const { record } = eventObject
-      console.log(config)
-      console.log(PLUGIN_ID)
 
       await Promise.all(
         config.targetFields.map(async (fieldCode) => {
@@ -18,7 +16,6 @@ import Display from "./components/Display.svelte"
           const parentEl = el?.parentElement
           if (parentEl) {
             parentEl.setAttribute("class", parentEl.getAttribute("class") + " yomiyasuin")
-            // const appEl = document.createElement("div")
             new Display({
               target: parentEl,
               props: {
@@ -27,10 +24,6 @@ import Display from "./components/Display.svelte"
                 valueSelector: ".control-value-gaia",
               },
             })
-            console.log()
-            // appEl.setAttribute("class", "yomiyasuin-wrapper markdown-body")
-            // appEl.innerHTML = html
-            // parentEl.appendChild(appEl)
           }
         })
       )

@@ -3,7 +3,6 @@ import remarkParse from "remark-parse"
 import remarkRehype from "remark-rehype"
 import rehypeStringify from "rehype-stringify"
 import { plugin, handlers } from "./yomiyasuin"
-import remarkBreaks from "remark-breaks"
 import rehypeExternalLinks from "rehype-external-links"
 
 export const toHtml = async (markdown: string, userData: any) => {
@@ -12,7 +11,6 @@ export const toHtml = async (markdown: string, userData: any) => {
     .use(plugin, {
       userData,
     })
-    .use(remarkBreaks)
     .use(remarkRehype, {
       handlers,
     })
