@@ -14,7 +14,12 @@
 </div>
 
 <style>
-  .fields-selector {
-    margin-top: 24px;
+  .fields-selector select {
+    border-color: #b4b4b4;
+    font-size: 14px;
+    min-width: 200px;
+  }
+  .fields-selector option {
+    padding: 4px;
   }
 </style>

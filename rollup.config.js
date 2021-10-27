@@ -6,8 +6,19 @@ import sveltePreprocess from "svelte-preprocess"
 import typescript from "@rollup/plugin-typescript"
 import css from "rollup-plugin-css-only"
 
-// const production = !process.env.ROLLUP_WATCH;
-const production = false
+const production = !process.env.ROLLUP_WATCH
+const globalVars = new Set(["kintone"])
+const onwarn = (warning, handler) => {
+  switch (warning.code) {
+    case "missing-declaration":
+      const name = warning.message.split("'")[1]
+      if (globalVars.has(name)) {
+        return
+      }
+    default:
+      handler(warning)
+  }
+}
 
 export default [
   {
@@ -25,6 +36,7 @@ export default [
           // enable run-time checks when not in production
           dev: true,
         },
+        onwarn,
       }),
       css({ output: "plugin.css" }),
       resolve({
@@ -56,6 +68,7 @@ export default [
           // enable run-time checks when not in production
           dev: !production,
         },
+        onwarn,
       }),
       css({ output: "config.css" }),
       resolve({

@@ -1,129 +1,63 @@
-import { convertToTable } from "./modules/convertToTable"
 import type { KintoneEventObject } from "./types"
 import { getPluginConfig } from "./modules/getPluginConfig"
-import type { Transformer } from "unified"
-import { unified } from "unified"
-import type { Node } from "unist"
-import type { Root } from "mdast"
-import { remark } from "remark"
-import remarkHtml from "remark-html"
-import remarkParse from "remark-parse"
-import remarkRehype from "remark-rehype"
-import rehypeRaw from "rehype-raw"
-import remarkExternalLinks from "remark-external-links"
+import { toHtml } from "./modules/toHtml"
+import Display from "./components/Display.svelte"
+import Preview from "./components/Preview.svelte"
 ;((PLUGIN_ID) => {
+  kintone.events.on(["app.record.detail.show"], async (eventObject: KintoneEventObject) => {
+    const config = getPluginConfig(PLUGIN_ID)
+    const { record } = eventObject
+    await Promise.all(
+      config.targetFields.map(async (fieldCode) => {
+        const html = await toHtml(record[fieldCode].value as string, config.userData)
+        const el = getFieldElement(fieldCode)
+        const containerEl = el?.parentElement
+        const selector = ".control-value-gaia"
+        if (containerEl) {
+          containerEl.setAttribute("class", containerEl.getAttribute("class") + " yomiyasuin")
+          new Display({
+            target: containerEl,
+            props: {
+              html,
+              containerEl: containerEl,
+              valueSelector: selector,
+            },
+          })
+          containerEl.querySelector(selector)?.setAttribute("aria-hidden", "true")
+        }
+      })
+    )
+    return eventObject
+  })
+
   kintone.events.on(
-    ["app.record.detail.show", "app.record.create.show", "app.record.edit.show"],
+    ["app.record.create.show", "app.record.edit.show"],
     async (eventObject: KintoneEventObject) => {
       const config = getPluginConfig(PLUGIN_ID)
-      const { record } = eventObject
-      console.log(config)
-      console.log(PLUGIN_ID)
-
-      await Promise.all(
-        config.targetFields.map(async (fieldCode) => {
-          console.log(fieldCode)
-          console.log(await unified().use)
-          const result = await remark()
-            .use(remarkParse)
-            .use(plugin)
-            // .use(remarkRehype, { allowDangerousHtml: true })
-            // .use(rehypeRaw)
-            .use(remarkExternalLinks, { target: "_blank", rel: ["nofollow"] })
-            .use(remarkHtml)
-            .process(record[fieldCode].value as string)
-          console.log(result.value)
-          const el = kintone.app.record.getFieldElement(fieldCode)
-          if (el) {
-            const start = new RegExp("&#x3C;", "g")
-            el.innerHTML = (result.value as string).replace(start, "<")
-            // el.innerHTML = result.value as string
-          }
+      config.targetFields.map((fieldCode) => {
+        const el = getFieldElement(fieldCode)
+        // previewコンポーネントにわたす
+        const containerEl = el?.parentElement
+        new Preview({
+          target: containerEl,
+          props: {
+            fieldCode,
+            userData: config.userData,
+            containerEl: containerEl,
+          },
         })
-      )
+      })
       return eventObject
     }
   )
-  // @ts-ignore
-})(kintone.$PLUGIN_ID)
 
-const plugin: () => Transformer = () => {
-  const transformer: Transformer = (tree: Node) => {
-    const root = tree as Root
-    root.children.forEach((node, index) => {
-      console.log(node)
-      if (node.type !== "paragraph") return
-      if (node.children[0].type === "text" && isGijiroku(node.children[0].value)) {
-        // @ts-ignore
-        node.children = convert(node.children[0].value)
-        // @ts-ignore
-        node.type = "element"
-      }
-    })
-    return root
+  function getFieldElement(fieldCode: string) {
+    let fieldEl = kintone.app.record.getFieldElement(fieldCode)
+    if (fieldEl) return fieldEl
+    const fieldList = window.cybozu.data.page.FORM_DATA.schema.table.fieldList
+    const field = Object.values(fieldList).find((field) => field.var === fieldCode)
+    if (!field) return null
+    fieldEl = document.querySelector(`.value-${field.id}`)
+    return fieldEl
   }
-  return transformer
-}
-
-const isGijiroku = (src: string) => {
-  let cursor = -1
-  const lines = src.split("\n").reduce<string[]>((ret, line) => {
-    if (/.+[：]/.test(line)) {
-      cursor++
-    }
-    if (!ret[cursor]) {
-      ret[cursor] = ""
-    }
-    ret[cursor] += `${line.trimLeft()}`
-    return ret
-  }, [])
-
-  return lines.length > 1
-}
-
-const convert = (src: string) => {
-  let cursor = -1
-  const lines = src.split("\n").reduce<string[]>((ret, line) => {
-    if (/.+[：]/.test(line)) {
-      cursor++
-    }
-    if (!ret[cursor]) {
-      ret[cursor] = ""
-    }
-    ret[cursor] += `${line.trimLeft()}`
-    return ret
-  }, [])
-
-  if (lines.length <= 1) return src
-
-  return lines.map((line) => {
-    const [name, selif] = line.split("：")
-    return {
-      type: "paragraph",
-      children: [
-        {
-          type: "image",
-          position: {},
-          url: "https://static.cybozu.com/contents/k/image/icon/user/user_32.svg",
-        },
-        {
-          type: "strong",
-          children: [
-            {
-              type: "text",
-              value: name,
-              position: {},
-            },
-          ],
-          position: {},
-        },
-        {
-          type: "text",
-          value: selif,
-          position: {},
-        },
-      ],
-      position: {},
-    }
-  })
-}
+})(kintone.$PLUGIN_ID)

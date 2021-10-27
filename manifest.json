@@ -4,7 +4,7 @@
   "type": "APP",
   "desktop": {
     "js": ["assets/build/plugin.js"],
-    "css": ["assets/build/plugin.css"]
+    "css": ["assets/build/plugin.css", "assets/yomiyasuin.css"]
   },
   "icon": "assets/image/icon.png",
   "config": {
