@@ -6,8 +6,7 @@ import sveltePreprocess from "svelte-preprocess"
 import typescript from "@rollup/plugin-typescript"
 import css from "rollup-plugin-css-only"
 
-// const production = !process.env.ROLLUP_WATCH;
-const production = false
+const production = !process.env.ROLLUP_WATCH
 const globalVars = new Set(["kintone"])
 const onwarn = (warning, handler) => {
   switch (warning.code) {
