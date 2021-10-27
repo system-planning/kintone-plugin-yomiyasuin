@@ -14,6 +14,7 @@ import Display from "./components/Display.svelte"
           const html = await toHtml(record[fieldCode].value as string, config.userData)
           const el = kintone.app.record.getFieldElement(fieldCode)
           const parentEl = el?.parentElement
+          const selector = ".control-value-gaia"
           if (parentEl) {
             parentEl.setAttribute("class", parentEl.getAttribute("class") + " yomiyasuin")
             new Display({
@@ -21,9 +22,10 @@ import Display from "./components/Display.svelte"
               props: {
                 html,
                 containerEl: parentEl,
-                valueSelector: ".control-value-gaia",
+                valueSelector: selector,
               },
             })
+            parentEl.querySelector(selector)?.setAttribute("aria-hidden", "true")
           }
         })
       )

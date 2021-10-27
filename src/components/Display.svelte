@@ -9,22 +9,41 @@
     if (!valueEl) return
     valueEl.setAttribute("aria-hidden", isShown ? "true" : "false")
   }
+
+  // アプリコードの自動リンクを反映
+  const replaceAutoLinks = (html: string) => {
+    const valueEl = containerEl.querySelector(valueSelector)
+    if (!valueEl) return html
+    const links = valueEl.querySelectorAll('[itemprop="autolink"]')
+    const autoLinks = Array.from(links).filter((link) => {
+      return /[a-z|A-Z|0-9]+-[0-9]+/.test(link.textContent)
+    })
+    autoLinks.forEach((link) => {
+      html = html.replace(
+        link.textContent,
+        `<a href="${link.getAttribute("href")}" target="_blank">${link.textContent}</a>`
+      )
+    })
+    return html
+  }
+
+  $: autoLinkedHtml = replaceAutoLinks(html)
 </script>
 
 <div class="yomiyasuin-display">
-  <div class="yomiyasuin-switch">
-    <label>
-      HTML <input
-        type="checkbox"
-        on:click={onClick}
-        checked={isShown}
-        aria-label="display as HTML"
-      />
-    </label>
-  </div>
-  {#if isShown}
-    <div class="yomiyasuin-html markdown-body">{@html html}</div>
-  {/if}
+  <!--  <div class="yomiyasuin-switch">-->
+  <!--    <label>-->
+  <!--      HTML <input-->
+  <!--        type="checkbox"-->
+  <!--        on:click={onClick}-->
+  <!--        checked={isShown}-->
+  <!--        aria-label="display as HTML"-->
+  <!--      />-->
+  <!--    </label>-->
+  <!--  </div>-->
+  <!--  {#if isShown}-->
+  <div class="yomiyasuin-html">{@html autoLinkedHtml}</div>
+  <!--  {/if}-->
 </div>
 
 <style>
