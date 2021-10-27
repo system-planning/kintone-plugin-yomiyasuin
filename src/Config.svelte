@@ -8,8 +8,6 @@
   let userData = config.userData
   let errorMessage = ""
 
-  console.log(config)
-
   const onSelectTargetFields = (e) => {
     const target = e.target as HTMLSelectElement
     selectedFields = Array.from(target.options)

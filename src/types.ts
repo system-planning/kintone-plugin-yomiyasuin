@@ -23,3 +23,27 @@ export type PluginConfig = {
 export type KintoneEventObject = {
   record: KintoneRecord
 }
+
+declare global {
+  interface Window {
+    cybozu: {
+      data: {
+        page: {
+          FORM_DATA: {
+            schema: {
+              table: {
+                fieldList: Record<
+                  string,
+                  {
+                    id: string
+                    var: string
+                  }
+                >
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

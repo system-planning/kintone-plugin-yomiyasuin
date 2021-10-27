@@ -16,7 +16,7 @@
     if (!valueEl) return html
     const links = valueEl.querySelectorAll('[itemprop="autolink"]')
     const autoLinks = Array.from(links).filter((link) => {
-      return /[a-z|A-Z|0-9]+-[0-9]+/.test(link.textContent)
+      return /^[a-z|A-Z]+[a-z|A-Z|0-9]?-[0-9]+$/.test(link.textContent)
     })
     autoLinks.forEach((link) => {
       html = html.replace(
