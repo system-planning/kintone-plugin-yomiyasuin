@@ -7,6 +7,10 @@
     "css": ["assets/build/plugin.css", "assets/yomiyasuin.css"]
   },
   "icon": "assets/image/icon.png",
+  "homepage_url": {
+    "ja": "https://github.com/nakajmg/kintone-plugin-yomiyasuin#readme",
+    "en": "https://github.com/nakajmg/kintone-plugin-yomiyasuin#readme"
+  },
   "config": {
     "html": "assets/config.html",
     "js": ["assets/build/config.js"],
@@ -18,7 +22,7 @@
     "ja": "yomiyasuin"
   },
   "description": {
-    "en": "yomiyasuin",
-    "ja": "yomiyasuin"
+    "en": "Plug-in to beautify the minutes",
+    "ja": "議事録を読みやすくするプラグイン"
   }
 }
