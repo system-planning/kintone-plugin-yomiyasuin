@@ -111,7 +111,7 @@ function createVisitor(userData: any) {
       if (!ret[cursor]) {
         ret[cursor] = ""
       }
-      ret[cursor] += `${line.trimLeft()}`
+      ret[cursor] += `\n${line.trim()}`
       return ret
     }, [])
 
@@ -176,7 +176,7 @@ const isGijiroku = (node: unknown): node is Paragraph => {
     }
   }, [])
 
-  return cursor > 0
+  return cursor >= 0
 }
 
 function isObject(target: unknown): target is { [key: string]: unknown } {
