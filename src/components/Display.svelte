@@ -31,37 +31,12 @@
 </script>
 
 <div class="yomiyasuin-display">
-  <!--  <div class="yomiyasuin-switch">-->
-  <!--    <label>-->
-  <!--      HTML <input-->
-  <!--        type="checkbox"-->
-  <!--        on:click={onClick}-->
-  <!--        checked={isShown}-->
-  <!--        aria-label="display as HTML"-->
-  <!--      />-->
-  <!--    </label>-->
-  <!--  </div>-->
-  <!--  {#if isShown}-->
   <div class="yomiyasuin-html">{@html autoLinkedHtml}</div>
-  <!--  {/if}-->
 </div>
 
 <style>
   .yomiyasuin-display {
-    margin: 0 8px;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    height: 100%;
     min-width: 80px;
-  }
-  .yomiyasuin-switch {
-    position: absolute;
-    right: 8px;
-    top: 8px;
-    white-space: nowrap;
-    z-index: 10;
   }
   .yomiyasuin-html {
     padding: 8px;
