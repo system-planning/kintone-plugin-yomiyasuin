@@ -111,7 +111,7 @@ function createVisitor(userData: any) {
       if (!ret[cursor]) {
         ret[cursor] = ""
       }
-      ret[cursor] += `${line.trimLeft()}`
+      ret[cursor] += `\n${line.trim()}`
       return ret
     }, [])
 
