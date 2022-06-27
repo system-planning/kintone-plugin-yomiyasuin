@@ -24,6 +24,7 @@ import Preview from "./components/Preview.svelte"
             },
           })
           containerEl.querySelector(selector)?.setAttribute("aria-hidden", "true")
+          containerEl.querySelector(selector)?.setAttribute("style", "display: none;")
         }
       })
     )
