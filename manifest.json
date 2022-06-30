@@ -1,10 +1,14 @@
 {
   "manifest_version": 1,
-  "version": 1,
+  "version": 2,
   "type": "APP",
   "desktop": {
     "js": ["assets/build/plugin.js"],
     "css": ["assets/build/plugin.css", "assets/yomiyasuin.css"]
+  },
+  "mobile": {
+    "js": ["assets/build/plugin.js"],
+    "css": ["assets/build/plugin.css", "assets/yomiyasuin.sp.css"]
   },
   "icon": "assets/image/icon.png",
   "homepage_url": {
