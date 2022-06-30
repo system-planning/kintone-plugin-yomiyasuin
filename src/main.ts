@@ -8,6 +8,7 @@ import Preview from "./components/Preview.svelte"
     ["app.record.detail.show", "mobile.app.record.detail.show"],
     async (eventObject: KintoneEventObject) => {
       const config = getPluginConfig(PLUGIN_ID)
+      console.log(config)
       const { record } = eventObject
       await Promise.all(
         config.targetFields.map(async (fieldCode) => {
@@ -35,7 +36,7 @@ import Preview from "./components/Preview.svelte"
   )
 
   kintone.events.on(
-    ["app.record.create.show", "app.record.edit.show", "app."],
+    ["app.record.create.show", "app.record.edit.show"],
     async (eventObject: KintoneEventObject) => {
       const config = getPluginConfig(PLUGIN_ID)
       config.targetFields.map((fieldCode) => {
