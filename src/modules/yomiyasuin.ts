@@ -14,6 +14,7 @@ import remarkBreaks from "remark-breaks"
 import { toHast } from "mdast-util-to-hast/lib"
 import { toHtml } from "hast-util-to-html"
 import rehypeRaw from "rehype-raw"
+import { combiineToLines } from "./combineToLines"
 
 export const plugin: Plugin = ({ userData }: { userData: any }) => {
   return (tree: Node, _file: VFileCompatible) => {
@@ -103,17 +104,7 @@ function createVisitor(userData: any) {
     // @ts-ignore
     const partialMd = toHtml(toHast(node).children)
 
-    let cursor = -1
-    const lines = partialMd.split("\n").reduce<string[]>((ret, line) => {
-      if (/.+[：]/.test(line)) {
-        cursor++
-      }
-      if (!ret[cursor]) {
-        ret[cursor] = ""
-      }
-      ret[cursor] += `${ret[cursor] ? "\n" : ""}${line.trim()}`
-      return ret
-    }, [])
+    const lines = combiineToLines(partialMd)
 
     const defaultIcon = "https://static.cybozu.com/contents/k/image/icon/user/user_32.svg"
     const mapData = new Map()
@@ -149,7 +140,8 @@ function createVisitor(userData: any) {
             children: [
               {
                 type: "text",
-                value: selif,
+                // リスト記法が来ると無視されるのでパッチ対応。数値のリストだけ対応してる
+                value: selif.replace(/\d\./g, (matched) => matched.replace(".", "．")),
               },
             ],
           },

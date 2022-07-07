@@ -8,7 +8,6 @@ import Preview from "./components/Preview.svelte"
     ["app.record.detail.show", "mobile.app.record.detail.show"],
     async (eventObject: KintoneEventObject) => {
       const config = getPluginConfig(PLUGIN_ID)
-      console.log(config)
       const { record } = eventObject
       await Promise.all(
         config.targetFields.map(async (fieldCode) => {
