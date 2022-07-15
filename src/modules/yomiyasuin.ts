@@ -141,7 +141,7 @@ function createVisitor(userData: any) {
               {
                 type: "text",
                 // リスト記法が来ると無視されるのでパッチ対応。数値のリストだけ対応してる
-                value: selif.replace(/\d\./g, (matched) => matched.replace(".", "．")),
+                value: selif.replace(/\d\.\s/g, (matched) => matched.replace(/\.\s/g, "．")),
               },
             ],
           },
