@@ -30,9 +30,65 @@ import Preview from "./components/Preview.svelte"
           }
         })
       )
+      if(!config.targetSpaceFields.length) return eventObject
+      const spaceField = config.targetSpaceFields[0]
+      const spaceEl = kintone.app.record.getSpaceElement(spaceField)
+      if (!spaceEl) return eventObject
+      // 添付画像のサムネイル要素を取得する
+      const thumbnails = document.getElementsByClassName("gaia-ui-slideshow-thumbnail")
+      if (!thumbnails.length) return eventObject
+      spaceEl.setAttribute('class', 'files-space')
+      // 添付ごとにマークダウン用URLを格納するinput要素を作成する
+      for (const [index, thumbnail] of Object.entries(thumbnails)) {
+        const containerEl = createElement(spaceEl, 'div', 'files-lbl-' + index)
+        containerEl.textContent = thumbnail["title"]
+
+        const varUrl = thumbnail["src"].match(/^https:\/\/(.+?):?(d+)?(\/.*)?$/)[3]
+        const inputEl = createElement(spaceEl, 'input', 'files-url-' + index)
+        inputEl.value = getMarkUpImgUrl(varUrl, thumbnail["title"])
+        inputEl.setAttribute('class', 'files-url')
+        inputEl.setAttribute("style", "width: 250px; margin-bottom: 12px;")
+      }
+
+      // フォーカス時、クリック時に選択状態にする
+      document.querySelectorAll('.files-url').forEach(function (element) {
+        element.addEventListener('focus', function () {
+          this.select()
+        })
+
+        element.addEventListener('click', function (event) {
+          this.select()
+          event.preventDefault()
+        })
+      })
+      
       return eventObject
     }
   )
+
+  function createElement(parent, element, id) {
+    const el = document.createElement(element)
+    el.id = id
+    parent.appendChild(el)
+    return el
+  }
+
+  function getMarkUpImgUrl(url: string, title: string): string {
+    const pars = ['field', 'id', 'app', 'record', 'hash', 'row']
+    const aryUrl = url.split('&')
+    let markUrl: string[] = []
+  
+    markUrl.push(aryUrl[0])
+    for (let i = 1; i < aryUrl.length; i++) {
+      const sep = aryUrl[i].split('=')
+      if (pars.indexOf(sep[0]) > -1) {
+        markUrl.push(aryUrl[i])
+      }
+    }
+  
+    const result = `![${title}](${markUrl.join('&')}&.png)`
+    return result
+  }  
 
   kintone.events.on(
     ["app.record.create.show", "app.record.edit.show"],
