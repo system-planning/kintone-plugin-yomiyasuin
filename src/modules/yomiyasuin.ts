@@ -91,57 +91,11 @@ export const handlers: Record<string, Handler> = {
   },
   // @ts-ignore
   paragraph: (h: H, node: MdastNode) => {
-    let flgImage
-    const children = node.children.flatMap(child => {
-      if (child.type === 'image') {
-          flgImage = true
-          return h(child, 'img', {
-              src: child.url,
-              alt: child.alt || '',
-              title: child.title || '',
-          })
-      } else if (child.type === 'text') {
-        // 改行を適切に処理するために、改行を<br>に変換
-        const lines = child.value.split('\n')
-        return lines.flatMap((line, index) => {
-            // https を含んでいるかどうかを確認
-            if (line.includes('https')) {
-                // https を含んでいる場合、部分的に分割して処理
-                const parts = line.split(/(https?:\/\/[^\s]+)/g)
-                const partNodes = parts.flatMap(part => {
-                    if (/https?:\/\/[^\s]+/.test(part)) {
-                        // URL部分は <a> タグに変換
-                        return { type: 'element', tagName: 'a', properties: { href: part }, children: [{ type: 'text', value: part }] }
-                    } else {
-                        // それ以外は通常のテキストとして処理
-                        return { type: 'text', value: part }
-                    }
-                })
-                if (index < lines.length - 1) {
-                    // 行末でなければ <br> を追加
-                    partNodes.push({ type: 'element', tagName: 'br', properties: {}, children: [] })
-                }
-                return partNodes
-            } else {
-                // https を含んでいない場合、通常のテキスト処理と <br> 処理を行う
-                const lineNode = { type: 'text', value: line }
-                if (index < lines.length - 1) {
-                    return [
-                        lineNode,
-                        { type: 'element', tagName: 'br', properties: {}, children: [] }
-                    ]
-                } else {
-                    return lineNode
-                }
-            }
-        })
-    } else {
-          // 他の要素はそのまま処理
-          return h(child, all(h, child))
-      }
-    })
-    if (flgImage) return h(node, 'p', children)
-    const partialMd = toString(node)
+    const partialMd = node.children.map((child) => 
+      child.type === 'image' ? 
+      `![${child.alt}](${child.url})`: 
+      toString(child)
+    ).join()
     const processer = unified().use(remarkBreaks).use(remarkParse).use(remarkGfm).use(remarkRehype)
     const mdast = processer.parse(partialMd)
     const hast = processer.runSync(mdast)
