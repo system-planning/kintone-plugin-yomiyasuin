@@ -6,5 +6,6 @@ export const getPluginConfig = (PLUGIN_ID: string): PluginConfig => {
     ...config,
     targetFields: JSON.parse(typeof config.targetFields === "string" ? config.targetFields : "[]"),
     userData: JSON.parse(typeof config.userData === "string" ? config.userData : "[]"),
+    targetSpaceFields: JSON.parse(typeof config.targetSpaceFields === "string" ? config.targetSpaceFields : "[]"),
   }
 }

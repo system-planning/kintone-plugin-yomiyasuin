@@ -19,7 +19,7 @@
       return /^[a-z|A-Z]+[a-z|A-Z|0-9]?-[0-9]+$/.test(link.textContent)
     })
     autoLinks.forEach((link) => {
-      html = html.replace(
+      html = html.replaceAll(
         link.textContent,
         `<a href="${link.getAttribute("href")}" target="_blank">${link.textContent}</a>`
       )

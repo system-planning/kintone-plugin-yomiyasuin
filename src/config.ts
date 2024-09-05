@@ -4,7 +4,7 @@ import Config from "./Config.svelte"
 ;(async (PLUGIN_ID) => {
   const config: PluginConfig = getPluginConfig(PLUGIN_ID)
 
-  const res: FieldsJson = await kintone.api("/k/v1/app/form/fields.json", "GET", {
+  const res: FieldsJson = await kintone.api("/k/v1/preview/form", "GET", {
     app: kintone.app.getId(),
   })
   if (!res?.properties) return

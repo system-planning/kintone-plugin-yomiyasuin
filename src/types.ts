@@ -18,6 +18,7 @@ export type User = {
 export type PluginConfig = {
   targetFields: string[]
   userData: User[]
+  targetSpaceFields: string[]
 }
 
 export type KintoneEventObject = {

@@ -1,10 +1,12 @@
 <script lang="ts">
   import TargetFieldsSelector from "./components/TargetFieldsSelector.svelte"
+  import SpaceFieldsSelector from "./components/SpaceFieldsSelector.svelte"
   import type { FieldProperties, PluginConfig } from "./types"
   import UserDataEditor from "./components/UserDataEditor.svelte"
   export let properties: FieldProperties
   export let config: PluginConfig
   let selectedFields = config.targetFields
+  let selectedSpaceFields = config.targetSpaceFields
   let userData = config.userData
   let errorMessage = ""
 
@@ -15,10 +17,25 @@
       .map((el) => el.value)
   }
 
+  const onSelectTargetSpaceFields = (e) => {
+    const target = e.target as HTMLSelectElement
+    selectedSpaceFields = Array.from(target.options)
+      .filter((el) => el.selected)
+      .map((el) => el.value)
+  }
+
   $: filteredProperties = properties
     ? Object.entries(properties)
         .filter(([_, property]) => {
           return property.type === "MULTI_LINE_TEXT"
+        })
+        .map(([_, property]) => property)
+    : []
+
+  $: spaceFilteredProperties = properties
+    ? Object.entries(properties)
+        .filter(([_, property]) => {
+          return (property.type as string) === "SPACER";
         })
         .map(([_, property]) => property)
     : []
@@ -50,6 +67,7 @@
         ...config,
         targetFields: JSON.stringify(selectedFields),
         userData: JSON.stringify(userData),
+        targetSpaceFields: JSON.stringify(selectedSpaceFields),
       })
     } catch (e) {
       errorMessage = e.message
@@ -66,6 +84,14 @@
         properties={filteredProperties}
         handleChange={onSelectTargetFields}
         value={selectedFields}
+      />
+    </section>
+    <section class="targetSpaceFields">
+      <h3 class="heading">Space Fields</h3>
+      <SpaceFieldsSelector
+        properties={spaceFilteredProperties}
+        handleChange={onSelectTargetSpaceFields}
+        value={selectedSpaceFields}
       />
     </section>
     <section class="userData">

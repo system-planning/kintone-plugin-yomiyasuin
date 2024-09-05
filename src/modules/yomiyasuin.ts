@@ -91,7 +91,11 @@ export const handlers: Record<string, Handler> = {
   },
   // @ts-ignore
   paragraph: (h: H, node: MdastNode) => {
-    const partialMd = toString(node)
+    const partialMd = node.children.map((child) => 
+      child.type === "image" ? 
+      `![${child.alt}](${child.url})`: 
+      toString(child)
+    ).join("")
     const processer = unified().use(remarkBreaks).use(remarkParse).use(remarkGfm).use(remarkRehype)
     const mdast = processer.parse(partialMd)
     const hast = processer.runSync(mdast)
