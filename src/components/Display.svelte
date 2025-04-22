@@ -19,9 +19,12 @@
       return /^[a-zA-Z0-9]+-[0-9]+$/.test(link.textContent)
     })
     autoLinks.forEach((link) => {
-      html = html.replaceAll(
-        link.textContent,
-        `<a href="${link.getAttribute("href")}" target="_blank">${link.textContent}</a>`
+      const text = link.textContent?.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // エスケープ
+      if (!text) return
+      const regex = new RegExp(`\\b${text}\\b`, "g")
+      html = html.replace(
+        regex,
+        `<a href="${link.getAttribute("href")}" target="_blank">${text}</a>`
       )
     })
     return html
