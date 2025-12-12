@@ -101,6 +101,29 @@ export const handlers: Record<string, Handler> = {
     const hast = processer.runSync(mdast)
     return hast
   },
+  plaintext: (h: H, node: MdastNode) => {
+  const processer = unified()
+    .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkRehype, {
+      allowDangerousHtml: true,
+    })
+    .use(rehypeRaw)
+  // @ts-ignore
+  const mdast = processer.parse(node.children[0].value)
+  // @ts-ignore
+  const hast = processer.runSync(mdast.children[0])
+
+  return {
+    type: "element",
+    tagName: "span",
+    properties: {
+      class: ["yomiyasuin-plaintext"],
+    },
+    // @ts-ignore
+    children: hast.children,
+  }
+},
 }
 
 function createVisitor(userData: any) {
@@ -123,6 +146,30 @@ function createVisitor(userData: any) {
 
     const gijiroku = lines.map((line) => {
       const [name, selif] = line.split("：")
+      
+      // 名前が辞書に存在しない場合は、元のテキストをそのまま返す
+      if (!name || !mapData.has(name)) {
+        return {
+          type: "line",
+          children: [
+            {
+              type: "text",
+              value: name + "：",
+            },
+            {
+            type: "plaintext",
+            children: [
+              {
+                type: "text",
+                // リスト記法が来ると無視されるのでパッチ対応。数値のリストだけ対応してる
+                value: selif.replace(/\d\.\s/g, (matched) => matched.replace(/\.\s/g, "．")),
+              },
+            ],
+          },
+          ],
+        }
+      }
+
       return {
         type: "line",
         children: [
